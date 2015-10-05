@@ -1,6 +1,8 @@
-{% extends '@WebDLCrawltrack/main.html.twig' %}
+{% extends '@WebDLCrawltrack/layout.html.twig' %}
 
-{% block body %}
+{% block title %}Crawler info - {{ crawler.name }}{% endblock %}
+
+{% block content %}
     <h1>{{ crawler.name }}</h1>
     {% if crawler.officialURL is not empty %}<h2>URL: {{ crawler.officialURL }}</h2>{% endif %}
 
