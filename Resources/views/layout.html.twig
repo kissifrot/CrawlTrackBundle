@@ -20,16 +20,13 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ path('webdl_crawltrack_homepage') }}">Crawltrack</a>
+                    <a class="navbar-brand" href="{{ path('webdl_crawltrack_homepage') }}">Crawltrack dashboard</a>
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="{{ path('webdl_crawltrack_homepage') }}">Home</a></li>
                         <li><a href="#about">About</a></li>
                     </ul>
-                    {#
-                    <p class="navbar-text pull-right">Signed in as <a href="#" class="navbar-link">Mark Otto</a></p>
-                    #}
                 </div>
             </div>
         </div>
@@ -41,7 +38,7 @@
 
         <footer class="footer">
             <div class="container">
-                <small>CrawlTrack{% if app.debug %} {{ app.environment }}{% endif %}</small>
+                <small>CrawlTrack{% if app.debug %} {{ app.environment }}{% endif %} {{ constant('WebDL\\CrawltrackBundle\\WebDLCrawltrackBundle::VERSION') }}</small>
             </div>
         </footer>
 
