@@ -1,0 +1,20 @@
+parameters:
+    crawltrackbundle.db.table_prefix: crwlt_
+
+services:
+
+    webdl_crawltrack.tblprefix_subscriber:
+        class: WebDL\CrawltrackBundle\Subscriber\TablePrefixSubscriber
+        arguments: [%crawltrackbundle.db.table_prefix%]
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    webdl_crawltrack.crawltrackrequestlistener:
+        class: WebDL\CrawltrackBundle\EventListener\CrawltrackRequestListener
+        arguments:  ["@webdl_crawltrack.crawlertracker"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    webdl_crawltrack.crawlertracker :
+        class: WebDL\CrawltrackBundle\Services\CrawlerTracker
+        arguments:  ["@doctrine.orm.entity_manager"]

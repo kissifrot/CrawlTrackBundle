@@ -1,0 +1,19 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    /* Fix for navbar-fixed-top class */
+    padding-top: 70px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    overflow-x: hidden;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    text-align: center;
+}

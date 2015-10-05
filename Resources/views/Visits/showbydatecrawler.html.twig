@@ -1,0 +1,47 @@
+{% extends '@WebDLCrawltrack/layout.html.twig' %}
+
+{% block content %}
+    <h1>Visits at {{ crawlDate }} for crawler {{ crawler.name }}</h1>
+    {% if visits is not empty %}
+        <p>{{ visitsCount }} visit(s) counted</p>
+
+        {% if pagesCount > 1  %}
+            <nav class="text-center">
+                <ul class="pagination">
+                    <li{% if page == 1 %} class="disabled"{% endif %}><a href="{% if page == 1 %}#{% else %}{{ path('webdl_crawltrack_crawls_crawler_date', {'crawler_id': crawler.id, 'crawl_date': crawlDate, 'page': page-1}) }}{% endif %}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    {% for p in range(1, pagesCount) %}
+                        <li{% if p == page %} class="active"{% endif %}><a href="{{ path('webdl_crawltrack_crawls_crawler_date', {'crawler_id': crawler.id, 'crawl_date': crawlDate, 'page': p}) }}">{{ p }}</a></li>
+                    {% endfor %}
+                    <li{% if page == pagesCount %} class="disabled"{% endif %}><a href="{% if page == pagesCount %}#{% else %}{{ path('webdl_crawltrack_crawls_crawler_date', {'crawler_id': crawler.id, 'crawl_date': crawlDate, 'page': page+1}) }}{% endif %}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                </ul>
+            </nav>
+        {% endif %}
+
+        <table class="table table-striped table-hover ">
+            <tr>
+                <th>Page URL</th>
+                <th>Visite date</th>
+            </tr>
+            {% for visit in visits %}
+                <tr>
+                    <td><a href="{{ visit.page.uri }}" target="_blank">{{ visit.page.uri }}</a></td>
+                    <td>{{ visit.visitDate|date("m/d/Y H:i:s") }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        {% if pagesCount > 1  %}
+            <nav class="text-center">
+                <ul class="pagination">
+                    <li{% if page == 1 %} class="disabled"{% endif %}><a href="{% if page == 1 %}#{% else %}{{ path('webdl_crawltrack_crawls_crawler_date', {'crawler_id': crawler.id, 'crawl_date': crawlDate, 'page': page-1}) }}{% endif %}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    {% for p in range(1, pagesCount) %}
+                        <li{% if p == page %} class="active"{% endif %}><a href="{{ path('webdl_crawltrack_crawls_crawler_date', {'crawler_id': crawler.id, 'crawl_date': crawlDate, 'page': p}) }}">{{ p }}</a></li>
+                    {% endfor %}
+                    <li{% if page == pagesCount %} class="disabled"{% endif %}><a href="{% if page == pagesCount %}#{% else %}{{ path('webdl_crawltrack_crawls_crawler_date', {'crawler_id': crawler.id, 'crawl_date': crawlDate, 'page': page+1}) }}{% endif %}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <p><i>No pages crawled for this date</i></p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,11 @@
+webdl_crawltrack_homepage:
+    path:     /
+    defaults: { _controller: WebDLCrawltrackBundle:Default:index }
+
+webdl_crawltrack_crawls_crawler_date:
+    path:     /visits/{crawler_id}/{crawl_date}/{page}
+    defaults: { _controller: WebDLCrawltrackBundle:Visits:showByDateCrawler, page: 1 }
+
+webdl_crawltrack_crawler_details:
+    path:     /crawler/{crawler_id}
+    defaults: { _controller: WebDLCrawltrackBundle:Crawler:view }

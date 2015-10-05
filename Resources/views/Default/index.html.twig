@@ -1,0 +1,44 @@
+{% extends '@WebDLCrawltrack/layout.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            Visits for today ({{ today }})
+            {% if crawlsForToday is not empty %}
+            <table class="table table-striped table-hover ">
+                <tr>
+                    <th>Crawler name</th>
+                    <th>Hits</th>
+                </tr>
+                {% for crawlForToday in crawlsForToday %}
+                    <tr>
+                        <td><a href="{{ path('webdl_crawltrack_crawler_details', {'crawler_id': crawlForToday.id}) }}">{{ crawlForToday.name }}</a></td>
+                        <td><a href="{{ path('webdl_crawltrack_crawls_crawler_date', {'crawler_id': crawlForToday.id, 'crawl_date': today}) }}">{{ crawlForToday.pageVisits|length }}</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+                <p><i>No crawler visits for today</i></p>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            Visits yesterday ({{ yesterday }})
+            {% if crawlsForYesterday is not empty %}
+            <table class="table table-striped table-hover ">
+                <tr>
+                    <th>Crawler name</th>
+                    <th>Hits</th>
+                </tr>
+                {% for crawlForYesterday in crawlsForYesterday %}
+                    <tr>
+                        <td><a href="{{ path('webdl_crawltrack_crawler_details', {'crawler_id': crawlForYesterday.id}) }}">{{ crawlForYesterday.name }}</a></td>
+                        <td><a href="{{ path('webdl_crawltrack_crawls_crawler_date', {'crawler_id': crawlForYesterday.id, 'crawl_date': yesterday}) }}">{{ crawlForYesterday.pageVisits|length }}</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+                <p><i>No crawler visits for yesterday</i></p>
+            {% endif %}
+        </div>
+     </div>
+{% endblock %}

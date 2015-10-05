@@ -1,0 +1,74 @@
+{% extends '@WebDLCrawltrack/main.html.twig' %}
+
+{% block body %}
+    <h1>{{ crawler.name }}</h1>
+    {% if crawler.officialURL is not empty %}<h2>URL: {{ crawler.officialURL }}</h2>{% endif %}
+
+        <table class="table table-striped table-hover ">
+            <tr>
+                <th>Total hits</th>
+                <th>Total pages viewed</th>
+                <th>Part visited site</th>
+            </tr>
+                <tr>
+                    <td>{{ totalVisitsHits }}</td>
+                    <td>{{ totalVisitsPages }}</td>
+                    <td>??</td>
+                </tr>
+        </table>
+
+    <div id="visitsChart"></div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="http://code.highcharts.com/4.1.8/highcharts.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            $('#visitsChart').highcharts({
+                credits: false,
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Crawler: {{ crawler.name }}'
+                },
+                subtitle: {
+                    text: 'Hits and page views of the last 30 days'
+                },
+                xAxis: {
+                    categories: {{ chartCategories|raw }},
+                    crosshair: true
+                },
+                yAxis: [{
+                    min: 0,
+                    title: {
+                        text: null
+                    }
+                }, {
+                    linkedTo: 0,
+                    opposite: true,
+                    title: {
+                        text: null
+                    }
+                }],
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Hits',
+                    data: {{ chartHits }}
+
+                }, {
+                    name: 'Viewed pages',
+                    data: {{ chartPages }}
+
+                }]
+            });
+        });
+    </script>
+{% endblock %}

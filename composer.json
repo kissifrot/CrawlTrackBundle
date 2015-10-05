@@ -1,0 +1,24 @@
+{
+  "name": "webdl/crawltrack-bundle",
+  "description": "This bundles provides its own implementation of Crawltrack directly in Symfony",
+  "keywords": ["symfony2"],
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "authors": [{
+    "name" : "Philippe Villiers",
+    "email" : "kissifrot@gmail.com"
+  }],
+  "require": {
+    "php": ">=5.3.0",
+    "symfony/symfony" : "~2.7"
+  },
+  "suggest": {
+    "friendsofsymfony/user-bundle": "Allows users management"
+  },
+  "autoload": {
+    "psr-0": {
+      "WebDL\\CrawltrackBundle\\": ""
+    }
+  },
+  "target-dir" : "WebDL/CrawltrackBundle"
+}
