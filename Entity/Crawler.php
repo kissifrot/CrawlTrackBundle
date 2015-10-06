@@ -31,14 +31,26 @@ class Crawler
     /**
      * @var string
      *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="official_url", type="string", length=250, nullable=true)
      */
     private $officialURL;
 
     /**
-     * @ORM\OneToMany(targetEntity="CrawlerData", mappedBy="crawler")
+     * @ORM\OneToMany(targetEntity="CrawlerIPData", mappedBy="crawler")
      */
-    protected $ipUAs;
+    protected $ips;
+
+    /**
+     * @ORM\OneToMany(targetEntity="CrawlerUAData", mappedBy="crawler")
+     */
+    protected $UAs;
 
     /**
      * @ORM\OneToMany(targetEntity="CrawlerVisit", mappedBy="crawler")
@@ -84,41 +96,9 @@ class Crawler
      */
     public function __construct()
     {
-        $this->ipUAs = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Add ipUA
-     *
-     * @param \WebDL\CrawltrackBundle\Entity\CrawlerData $ipUA
-     *
-     * @return Crawler
-     */
-    public function addIpUA(\WebDL\CrawltrackBundle\Entity\CrawlerData $ipUA)
-    {
-        $this->ipUAs[] = $ipUA;
-
-        return $this;
-    }
-
-    /**
-     * Remove ipUA
-     *
-     * @param \WebDL\CrawltrackBundle\Entity\CrawlerData $ipUA
-     */
-    public function removeIpUA(\WebDL\CrawltrackBundle\Entity\CrawlerData $ipUA)
-    {
-        $this->ipUAs->removeElement($ipUA);
-    }
-
-    /**
-     * Get ipUAs
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getIpUAs()
-    {
-        return $this->ipUAs;
+        $this->UAs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->ips = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->pageVisits = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -177,5 +157,94 @@ class Crawler
     public function getOfficialURL()
     {
         return $this->officialURL;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Crawler
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Add ips
+     *
+     * @param \WebDL\CrawltrackBundle\Entity\CrawlerIPData $ips
+     * @return Crawler
+     */
+    public function addIp(\WebDL\CrawltrackBundle\Entity\CrawlerIPData $ips)
+    {
+        $this->ips[] = $ips;
+
+        return $this;
+    }
+
+    /**
+     * Remove ips
+     *
+     * @param \WebDL\CrawltrackBundle\Entity\CrawlerIPData $ips
+     */
+    public function removeIp(\WebDL\CrawltrackBundle\Entity\CrawlerIPData $ips)
+    {
+        $this->ips->removeElement($ips);
+    }
+
+    /**
+     * Get ips
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getIps()
+    {
+        return $this->ips;
+    }
+
+    /**
+     * Add UAs
+     *
+     * @param \WebDL\CrawltrackBundle\Entity\CrawlerUAData $uAs
+     * @return Crawler
+     */
+    public function addUA(\WebDL\CrawltrackBundle\Entity\CrawlerUAData $uAs)
+    {
+        $this->UAs[] = $uAs;
+
+        return $this;
+    }
+
+    /**
+     * Remove UAs
+     *
+     * @param \WebDL\CrawltrackBundle\Entity\CrawlerUAData $uAs
+     */
+    public function removeUA(\WebDL\CrawltrackBundle\Entity\CrawlerUAData $uAs)
+    {
+        $this->UAs->removeElement($uAs);
+    }
+
+    /**
+     * Get UAs
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUAs()
+    {
+        return $this->UAs;
     }
 }

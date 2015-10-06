@@ -2,7 +2,6 @@
 
 namespace WebDL\CrawltrackBundle\Entity;
 
-
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr;
 
@@ -16,12 +15,13 @@ class CrawlerRepository extends EntityRepository
 {
     public function findByIPOrUA($ip, $ua = null) {
         $qb = $this->createQueryBuilder('c')
-            ->leftJoin('c.ipUAs', 'ipuas')
-            ->where('ipuas.ip = :ip');
+            ->leftJoin('c.ips', 'ips')
+            ->leftJoin('c.UAs', 'uas')
+            ->where('ips.ip = :ip');
         if(empty($ua)) {
-            $qb->orWhere('ipuas.userAgent IS NULL');
+            $qb->orWhere('uas.userAgent IS NULL');
         } else {
-            $qb->orWhere('ipuas.userAgent = :ua')
+            $qb->orWhere('uas.userAgent = :ua')
             ->setParameter('ua', $ua);
         }
         $qb->setParameter('ip', $ip);

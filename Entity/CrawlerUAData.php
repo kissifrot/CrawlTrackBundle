@@ -5,12 +5,12 @@ namespace WebDL\CrawltrackBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CrawlerData
+ * CrawlerUAData
  *
- * @ORM\Table(name="crawler_data",indexes={@ORM\Index(name="crawler_ip_idx", columns={"ip"})})
+ * @ORM\Table(name="crawler_ua_data",indexes={@ORM\Index(name="crawler_ua_idx", columns={"ip"})})
  * @ORM\Entity(repositoryClass="WebDL\CrawltrackBundle\Entity\CrawlerDataRepository")
  */
-class CrawlerData
+class CrawlerUAData
 {
     /**
      * @var integer
@@ -24,14 +24,7 @@ class CrawlerData
     /**
      * @var string
      *
-     * @ORM\Column(name="ip", type="string", length=15, nullable=true)
-     */
-    private $ip;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="userAgent", type="string", length=255, nullable=true)
+     * @ORM\Column(name="userAgent", type="string", length=255, nullable=false)
      */
     private $userAgent;
 
@@ -50,30 +43,6 @@ class CrawlerData
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set ip
-     *
-     * @param string $ip
-     *
-     * @return CrawlerData
-     */
-    public function setIp($ip)
-    {
-        $this->ip = $ip;
-
-        return $this;
-    }
-
-    /**
-     * Get ip
-     *
-     * @return string
-     */
-    public function getIp()
-    {
-        return $this->ip;
     }
 
     /**
