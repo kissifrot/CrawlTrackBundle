@@ -32,9 +32,17 @@ class CrawlerVisit
     /**
      * @var string
      *
-     * @ORM\Column(name="from_ip", type="string", length=15)
+     * @ORM\Column(name="from_ip", type="string", length=40)
      */
     private $fromIP;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="from_ua", type="string", length=255, nullable=true)
+     */
+    private $fromUA;
 
     /**
      * @ORM\ManyToOne(targetEntity="Crawler", inversedBy="pageVisits")
@@ -160,5 +168,28 @@ class CrawlerVisit
     public function getFromIP()
     {
         return $this->fromIP;
+    }
+
+    /**
+     * Set fromUA
+     *
+     * @param string $fromUA
+     * @return CrawlerVisit
+     */
+    public function setFromUA($fromUA)
+    {
+        $this->fromUA = $fromUA;
+
+        return $this;
+    }
+
+    /**
+     * Get fromUA
+     *
+     * @return string 
+     */
+    public function getFromUP()
+    {
+        return $this->fromUA;
     }
 }

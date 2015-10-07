@@ -21,11 +21,12 @@ class CrawltrackRequestListener {
      */
     public function onKernelRequest(GetResponseEvent $event) {
         if (!$event->isMasterRequest()) {
-            // don't do anything if it's not the master request
+            // Don't do anything if it's not the master request
             return;
         } else {
             $request = $event->getRequest();
             $uri = $request->getUri();
+            // Don't do anything if we have either profiler or Ajax calls
             if(stripos($uri, '_profiler') !== false || $request->isXmlHttpRequest()) {
                 return;
             }

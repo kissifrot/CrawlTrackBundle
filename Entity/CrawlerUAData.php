@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CrawlerUAData
  *
- * @ORM\Table(name="crawler_ua_data",indexes={@ORM\Index(name="crawler_ua_idx", columns={"ip"})})
+ * @ORM\Table(name="crawler_ua_data",indexes={@ORM\Index(name="crawler_ua_idx", columns={"user_agent"})})
  * @ORM\Entity(repositoryClass="WebDL\CrawltrackBundle\Entity\CrawlerDataRepository")
  */
 class CrawlerUAData
@@ -24,12 +24,39 @@ class CrawlerUAData
     /**
      * @var string
      *
-     * @ORM\Column(name="userAgent", type="string", length=255, nullable=false)
+     * @ORM\Column(name="user_agent", type="string", length=255, nullable=false)
      */
     private $userAgent;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Crawler", inversedBy="ipUAs")
+     * Indicates whether the UA is exact or not
+     *
+     * @var boolean
+     *
+     * @ORM\Column(name="is_exact", type="boolean", options={"default":true}, nullable=false)
+     */
+    private $isExact;
+
+    /**
+     * Indicates whether the UA is a Regexp or not
+     *
+     * @var boolean
+     *
+     * @ORM\Column(name="is_regexp", type="boolean", options={"default":false}, nullable=false)
+     */
+    private $isRegexp;
+
+    /**
+     * Indicates whether the UA is partial or not
+     *
+     * @var boolean
+     *
+     * @ORM\Column(name="is_partial", type="boolean", options={"default":false}, nullable=false)
+     */
+    private $isPartial;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Crawler", inversedBy="UAs")
      * @ORM\JoinColumn(name="crawler_id", referencedColumnName="id")
      */
     protected $crawler;
@@ -50,7 +77,7 @@ class CrawlerUAData
      *
      * @param string $userAgent
      *
-     * @return CrawlerData
+     * @return CrawlerUAData
      */
     public function setUserAgent($userAgent)
     {
@@ -74,7 +101,7 @@ class CrawlerUAData
      *
      * @param \WebDL\CrawltrackBundle\Entity\Crawler $crawler
      *
-     * @return CrawlerData
+     * @return CrawlerUAData
      */
     public function setCrawler(\WebDL\CrawltrackBundle\Entity\Crawler $crawler = null)
     {
@@ -91,5 +118,74 @@ class CrawlerUAData
     public function getCrawler()
     {
         return $this->crawler;
+    }
+
+    /**
+     * Set isRegexp
+     *
+     * @param boolean $isRegexp
+     * @return CrawlerUAData
+     */
+    public function setIsRegexp($isRegexp)
+    {
+        $this->isRegexp = $isRegexp;
+
+        return $this;
+    }
+
+    /**
+     * Get isRegexp
+     *
+     * @return boolean 
+     */
+    public function getIsRegexp()
+    {
+        return $this->isRegexp;
+    }
+
+    /**
+     * Set isPartial
+     *
+     * @param boolean $isPartial
+     * @return CrawlerUAData
+     */
+    public function setIsPartial($isPartial)
+    {
+        $this->isPartial = $isPartial;
+
+        return $this;
+    }
+
+    /**
+     * Get isPartial
+     *
+     * @return boolean 
+     */
+    public function getIsPartial()
+    {
+        return $this->isPartial;
+    }
+
+    /**
+     * Set isExact
+     *
+     * @param boolean $isExact
+     * @return CrawlerUAData
+     */
+    public function setIsExact($isExact)
+    {
+        $this->isExact = $isExact;
+
+        return $this;
+    }
+
+    /**
+     * Get isExact
+     *
+     * @return boolean 
+     */
+    public function getIsExact()
+    {
+        return $this->isExact;
     }
 }

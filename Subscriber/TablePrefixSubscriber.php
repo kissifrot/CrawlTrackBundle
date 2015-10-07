@@ -5,6 +5,7 @@
 namespace WebDL\CrawltrackBundle\Subscriber;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 class TablePrefixSubscriber implements \Doctrine\Common\EventSubscriber
 {
@@ -22,6 +23,7 @@ class TablePrefixSubscriber implements \Doctrine\Common\EventSubscriber
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $args)
     {
+        /** @var ClassMetadata $classMetadata */
         $classMetadata = $args->getClassMetadata();
 
         // Do not re-apply the prefix in an inheritance hierarchy.
