@@ -30,9 +30,9 @@ class CrawlerRepository extends EntityRepository
 
     public function findByExactIPOrUA($ip, $ua = null) {
         $qb = $this->createQueryBuilder('c')
-            ->leftJoin('c.ips', 'ipaddresses', Expr\Join::WITH, 'ipaddresses.isSingle = :isSingleOrExact')
+            ->leftJoin('c.ips', 'ipaddr', Expr\Join::WITH, 'ipaddr.isSingle = :isSingleOrExact')
             ->leftJoin('c.UAs', 'useragents', Expr\Join::WITH, 'useragents.isExact = :isSingleOrExact')
-            ->where('ipadresss.ip = :ip');
+            ->where('ipaddr.ipAddress = :ip');
         if(!empty($ua)) {
             $qb->orWhere('useragents.userAgent = :ua')
             ->setParameter('ua', $ua);
