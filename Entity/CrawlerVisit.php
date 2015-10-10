@@ -192,4 +192,14 @@ class CrawlerVisit
     {
         return $this->fromUA;
     }
+
+    /**
+     * Get fromUA
+     *
+     * @return string 
+     */
+    public function getFromUA()
+    {
+        return $this->fromUA;
+    }
 }
