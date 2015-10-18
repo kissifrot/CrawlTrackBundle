@@ -1,3 +1,7 @@
+web_dl_crawltrack_crawler:
+    resource: "@WebDLCrawltrackBundle/Resources/config/routing/crawler.yml"
+    prefix:   /crawler
+
 webdl_crawltrack_homepage:
     path:     /
     defaults: { _controller: WebDLCrawltrackBundle:Default:index }

@@ -31,13 +31,15 @@ class CrawlerRepository extends EntityRepository
     public function findByExactIPOrUA($ip, $ua = null) {
         $qb = $this->createQueryBuilder('c')
             ->leftJoin('c.ips', 'ipaddr', Expr\Join::WITH, 'ipaddr.isSingle = :isSingleOrExact')
-            ->leftJoin('c.UAs', 'useragents', Expr\Join::WITH, 'useragents.isExact = :isSingleOrExact')
-            ->where('ipaddr.ipAddress = :ip');
+            ->leftJoin('c.userAgents', 'uas', Expr\Join::WITH, 'uas.isExact = :isSingleOrExact')
+            ->where('c.isActive = :isActive')
+            ->andWhere('ipaddr.ipAddress = :ip');
         if(!empty($ua)) {
-            $qb->orWhere('useragents.userAgent = :ua')
+            $qb->orWhere('uas.userAgent = :ua')
             ->setParameter('ua', $ua);
         }
         $qb->setParameter('ip', $ip)
+            ->setParameter('isActive', true)
             ->setParameter('isSingleOrExact', true);
         $q = $qb->getQuery()
             ->useQueryCache(true)
@@ -56,7 +58,9 @@ class CrawlerRepository extends EntityRepository
      */
     public function findByIPRanges() {
         $qb = $this->createQueryBuilder('c')
+            ->where('c.isActive = :isActive')
             ->innerJoin('c.ips', 'ipaddresses', Expr\Join::WITH, 'ipaddresses.isSingle = :isSingle')
+            ->setParameter('isActive', true)
             ->setParameter('isSingle', false)
             ->addSelect('ipaddresses');
         return $qb->getQuery()
@@ -72,10 +76,12 @@ class CrawlerRepository extends EntityRepository
      */
     public function findByComplexUAs() {
         $qb = $this->createQueryBuilder('c')
-            ->innerJoin('c.UAs', 'useragents', Expr\Join::WITH, 'useragents.isExact = :isExact')
+            ->where('c.isActive = :isActive')
+            ->innerJoin('c.userAgents', 'uas', Expr\Join::WITH, 'uas.isExact = :isExact')
+            ->setParameter('isActive', true)
             ->setParameter('isExact', false)
-            ->orderBy('useragents.isRegexp', 'DESC') // results with regexp should appear first
-            ->addSelect('useragents');
+            ->orderBy('uas.isRegexp', 'DESC') // results with regexp should appear first
+            ->addSelect('uas');
         return $qb->getQuery()
             ->useQueryCache(true)
             ->useResultCache(true)

@@ -1,5 +1,56 @@
 {% extends '@WebDLCrawltrack/layout.html.twig' %}
 
+{% block title %}Crawler list{% endblock %}
+
 {% block content %}
-    <h1>{crawler.name}</h1>
+    <h1>Crawler list</h1>
+
+    {% if crawlers is not empty %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Official URL</th>
+                <th>Is active ?</th>
+                <th>Is harmful ?</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for crawler in crawlers %}
+                <tr>
+                    <td><a href="{{ path('crawler_show', { 'id': crawler.id }) }}">{{ entity.name }}</a></td>
+                    <td>{{ crawler.description }}</td>
+                    <td>{{ crawler.officialURL }}</td>
+                    <td>{% if crawler.isActive %}Yes{% else %}No{% endif %}</td>
+                    <td>{% if crawler.isHarmful %}Yes{% else %}No{% endif %}</td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href="{{ path('crawler_show', { 'id': crawler.id }) }}">show</a>
+                            </li>
+                            {% if crawler.refHash is empty %}
+                            <li>
+                                <a href="{{ path('crawler_edit', { 'id': crawler.id }) }}">edit</a>
+                            </li>
+                            {% endif %}
+                            <li>
+                                <a href="{{ path('crawler_toggle', { 'id': crawler.id }) }}">{% if crawler.isActive %}de{% endif %}activate</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No crawler yet. <a href="{{ path('crawler_new') }}">Create a new one</a></p>
+    {% endif %}
+
+    <ul>
+        <li>
+            <a href="{{ path('crawler_new') }}">Create a new entry</a>
+        </li>
+    </ul>
 {% endblock %}

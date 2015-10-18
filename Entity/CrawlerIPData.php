@@ -3,12 +3,14 @@
 namespace WebDL\CrawltrackBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * CrawlerIPData
  *
  * @ORM\Table(name="crawler_ip_data",indexes={@ORM\Index(name="crawler_ip_idx", columns={"ip_address"})})
  * @ORM\Entity(repositoryClass="WebDL\CrawltrackBundle\Entity\CrawlerIPDataRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class CrawlerIPData
 {
@@ -24,6 +26,7 @@ class CrawlerIPData
     /**
      * @var string
      *
+     * @Assert\Ip(version="all")
      * @ORM\Column(name="ip_address", type="string", length=80, nullable=false)
      */
     private $ipAddress;
@@ -43,13 +46,38 @@ class CrawlerIPData
     private $isRange;
 
     /**
+     * Internal use only (for reference crawler data updates)
+     *
+     * @var string
+     * @internal
+     *
+     * @ORM\Column(name="ref_hash", type="string", length=13, nullable=true)
+     */
+    private $refHash;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Crawler", inversedBy="ips")
-     * @ORM\JoinColumn(name="crawler_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="crawler_id", referencedColumnName="id", nullable=false)
      */
     protected $crawler;
 
     public function __construct() {
+        $this->isSingle = true;
+        $this->isRange = false;
+    }
 
+    public function __toString() {
+        return $this->ipAddress;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function checkSingle() {
+        if(preg_match('#[/\*-]+#', $this->ipAddress)) {
+            $this->isSingle = false;
+            $this->isRange = true;
+        }
     }
 
 
@@ -154,5 +182,28 @@ class CrawlerIPData
     public function getIsRange()
     {
         return $this->isRange;
+    }
+
+    /**
+     * Set refHash
+     *
+     * @param string $refHash
+     * @return CrawlerIPData
+     */
+    public function setRefHash($refHash)
+    {
+        $this->refHash = $refHash;
+
+        return $this;
+    }
+
+    /**
+     * Get refHash
+     *
+     * @return string 
+     */
+    public function getRefHash()
+    {
+        return $this->refHash;
     }
 }

@@ -20,9 +20,16 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('webdl_crawltrack');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        /*
+        $rootNode
+            ->children()
+            ->scalarNode('use_reverse_dns')
+            ->info('Use reverse DNS check to check if the IP used are really valid. Can slow your site down a lot')
+            ->defaultFalse()
+            ->isRequired()
+            ->cannotBeEmpty()
+            ->end()
+            ->end();*/
 
         return $treeBuilder;
     }

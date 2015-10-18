@@ -3,12 +3,17 @@
 namespace WebDL\CrawltrackBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Crawler
  *
  * @ORM\Table(name="crawler",uniqueConstraints={@ORM\UniqueConstraint(name="crawler_name_idx", columns={"name"})})
  * @ORM\Entity(repositoryClass="WebDL\CrawltrackBundle\Entity\CrawlerRepository")
+ * @UniqueEntity("name")
+ *
  */
 class Crawler
 {
@@ -24,7 +29,8 @@ class Crawler
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=150)
+     * @Assert\NotBlank()
+     * @ORM\Column(name="name", type="string", length=150, unique=true)
      */
     private $name;
 
@@ -36,6 +42,32 @@ class Crawler
     private $description;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_active", type="boolean", options={"default":false}, nullable=false)
+     */
+    private $isActive;
+
+    /**
+     * Is the crawler harmful? Used for scans and such
+     *
+     * @var boolean
+     *
+     * @ORM\Column(name="is_harmful", type="boolean", options={"default":false}, nullable=false)
+     */
+    private $isHarmful;
+
+    /**
+     * Internal use only (for reference crawlers updates)
+     *
+     * @var string
+     * @internal
+     *
+     * @ORM\Column(name="ref_hash", type="string", length=13, nullable=true)
+     */
+    private $refHash;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="official_url", type="string", length=250, nullable=true)
@@ -43,19 +75,34 @@ class Crawler
     private $officialURL;
 
     /**
-     * @ORM\OneToMany(targetEntity="CrawlerIPData", mappedBy="crawler")
+     * @ORM\OneToMany(targetEntity="CrawlerIPData", mappedBy="crawler", cascade={"persist", "remove"})
      */
-    protected $ips;
+    private $ips;
 
     /**
-     * @ORM\OneToMany(targetEntity="CrawlerUAData", mappedBy="crawler")
+     * @ORM\OneToMany(targetEntity="CrawlerUAData", mappedBy="crawler", cascade={"persist", "remove"})
      */
-    protected $UAs;
+    private $userAgents;
 
     /**
-     * @ORM\OneToMany(targetEntity="CrawlerVisit", mappedBy="crawler")
+     * @ORM\OneToMany(targetEntity="CrawlerVisit", mappedBy="crawler", cascade={"persist", "remove"})
      */
-    protected $pageVisits;
+    private $pageVisits;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->userAgents = new ArrayCollection();
+        $this->ips = new ArrayCollection();
+        $this->pageVisits = new ArrayCollection();
+        $this->isActive = true;
+    }
+
+    public function __toString() {
+        return $this->name;
+    }
 
 
     /**
@@ -90,15 +137,6 @@ class Crawler
     public function getName()
     {
         return $this->name;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->UAs = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->ips = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->pageVisits = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -175,7 +213,7 @@ class Crawler
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -190,6 +228,8 @@ class Crawler
      */
     public function addIp(\WebDL\CrawltrackBundle\Entity\CrawlerIPData $ips)
     {
+        $ips->setCrawler($this);
+
         $this->ips[] = $ips;
 
         return $this;
@@ -208,7 +248,7 @@ class Crawler
     /**
      * Get ips
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getIps()
     {
@@ -216,35 +256,106 @@ class Crawler
     }
 
     /**
-     * Add UAs
+     * Add userAgents
      *
-     * @param \WebDL\CrawltrackBundle\Entity\CrawlerUAData $uAs
+     * @param \WebDL\CrawltrackBundle\Entity\CrawlerUAData $userAgents
      * @return Crawler
      */
-    public function addUA(\WebDL\CrawltrackBundle\Entity\CrawlerUAData $uAs)
+    public function addUserAgent(\WebDL\CrawltrackBundle\Entity\CrawlerUAData $userAgents)
     {
-        $this->UAs[] = $uAs;
+        $userAgents->setCrawler($this);
+
+        $this->userAgents[] = $userAgents;
 
         return $this;
     }
 
     /**
-     * Remove UAs
+     * Remove userAgents
      *
      * @param \WebDL\CrawltrackBundle\Entity\CrawlerUAData $uAs
      */
-    public function removeUA(\WebDL\CrawltrackBundle\Entity\CrawlerUAData $uAs)
+    public function removeUserAgent(\WebDL\CrawltrackBundle\Entity\CrawlerUAData $userAgents)
     {
-        $this->UAs->removeElement($uAs);
+        $this->userAgents->removeElement($userAgents);
     }
 
     /**
-     * Get UAs
+     * Get userAgents
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function getUAs()
+    public function getUserAgents()
     {
-        return $this->UAs;
+        return $this->userAgents;
+    }
+
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     * @return Crawler
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean 
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Set refHash
+     *
+     * @param string $refHash
+     * @return Crawler
+     */
+    public function setRefHash($refHash)
+    {
+        $this->refHash = $refHash;
+
+        return $this;
+    }
+
+    /**
+     * Get refHash
+     *
+     * @return string 
+     */
+    public function getRefHash()
+    {
+        return $this->refHash;
+    }
+
+    /**
+     * Set isHarmful
+     *
+     * @param boolean $isHarmful
+     * @return Crawler
+     */
+    public function setIsHarmful($isHarmful)
+    {
+        $this->isHarmful = $isHarmful;
+
+        return $this;
+    }
+
+    /**
+     * Get isHarmful
+     *
+     * @return boolean 
+     */
+    public function getIsHarmful()
+    {
+        return $this->isHarmful;
     }
 }

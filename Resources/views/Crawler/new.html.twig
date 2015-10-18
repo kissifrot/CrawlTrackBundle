@@ -1,0 +1,103 @@
+{% extends '@WebDLCrawltrack/layout.html.twig' %}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block content %}
+    <h1>Crawler creation</h1>
+
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.officialURL) }}
+    {{ form_row(form.isHarmful) }}
+
+    <h3>IP addresses</h3>
+    <p>You can add single IP addresses, or ranges in the CIDR format (ex: 127.0.0.1/24), or even use wildcards</p>
+    <ul class="ip_address" data-prototype="{{ form_widget(form.ips.vars.prototype)|e }}">
+        {% for ip in form.ips %}
+            <li>{{ form_row(ip.ipAddress) }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>User agents</h3>
+    <ul class="user_agents" data-prototype="{{ form_widget(form.userAgents.vars.prototype)|e }}">
+        {% for ua in form.userAgents %}
+            <li>{{ form_row(ua.userAgent) }}
+                {{ form_row(ua.isRegexp) }}
+                {{ form_row(ua.isPartial) }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {{ form_end(form) }}
+
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path('crawler') }}">
+                Back to the list
+            </a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        var ipCollectionHolder;
+        var uaCollectionHolder;
+
+        var addIPLink = $('<a href="#" class="add_ip_link">Add an IP address</a>');
+        var newIPLinkLi = $('<li></li>').append(addIPLink);
+
+        var addUALink = $('<a href="#" class="add_ua_link">Add an User agent</a>');
+        var newUALinkLi = $('<li></li>').append(addUALink);
+
+        function addIPForm(ipCollectionHolder, newIPLinkLi) {
+            console.log(ipCollectionHolder);
+            var prototype = ipCollectionHolder.data('prototype');
+            console.log(prototype);
+
+            var index = ipCollectionHolder.data('index');
+            var newForm = prototype.replace(/__name__/g, index);
+
+            ipCollectionHolder.data('index', index + 1);
+
+            var newFormLi = $('<li></li>').append(newForm);
+            newIPLinkLi.before(newFormLi);
+        }
+
+        function addUAForm(uaCollectionHolder, newUALinkLi) {
+            var prototype = uaCollectionHolder.data('prototype');
+            console.log(prototype)
+
+            var index = uaCollectionHolder.data('index');
+            var newForm = prototype.replace(/__name__/g, index);
+
+            uaCollectionHolder.data('index', index + 1);
+
+            var newFormLi = $('<li></li>').append(newForm);
+            newUALinkLi.before(newFormLi);
+        }
+
+        $(document).ready(function () {
+            ipCollectionHolder = $('ul.ip_address');
+            ipCollectionHolder.append(newIPLinkLi);
+            ipCollectionHolder.data('index', ipCollectionHolder.find(':input').length);
+
+            uaCollectionHolder = $('ul.user_agents');
+            uaCollectionHolder.append(newUALinkLi);
+            uaCollectionHolder.data('index', uaCollectionHolder.find(':input').length);
+
+            addIPLink.on('click', function (e) {
+                e.preventDefault();
+
+                addIPForm(ipCollectionHolder, newIPLinkLi);
+            });
+
+            addUALink.on('click', function (e) {
+                e.preventDefault();
+
+                addIPForm(uaCollectionHolder, newUALinkLi);
+            });
+        });
+    </script>
+{% endblock %}

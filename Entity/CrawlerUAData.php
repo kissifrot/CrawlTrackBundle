@@ -56,10 +56,38 @@ class CrawlerUAData
     private $isPartial;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Crawler", inversedBy="UAs")
-     * @ORM\JoinColumn(name="crawler_id", referencedColumnName="id")
+     * Internal use only (for reference crawler data updates)
+     *
+     * @var string
+     * @internal
+     *
+     * @ORM\Column(name="ref_hash", type="string", length=13, nullable=true)
+     */
+    private $refHash;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Crawler", inversedBy="userAgents")
+     * @ORM\JoinColumn(name="crawler_id", referencedColumnName="id", nullable=false)
      */
     protected $crawler;
+
+    public function __construct() {
+        $this->isExact = true;
+        $this->isPartial = false;
+    }
+
+    public function __toString() {
+        return $this->userAgent;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function checkExact() {
+        if($this->isRegexp || $this->isPartial) {
+            $this->isExact = false;
+        }
+    }
 
 
     /**
@@ -187,5 +215,28 @@ class CrawlerUAData
     public function getIsExact()
     {
         return $this->isExact;
+    }
+
+    /**
+     * Set refHash
+     *
+     * @param string $refHash
+     * @return CrawlerUAData
+     */
+    public function setRefHash($refHash)
+    {
+        $this->refHash = $refHash;
+
+        return $this;
+    }
+
+    /**
+     * Get refHash
+     *
+     * @return string 
+     */
+    public function getRefHash()
+    {
+        return $this->refHash;
     }
 }
