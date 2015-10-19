@@ -23,6 +23,5 @@
     "psr-4": {
       "WebDL\\CrawltrackBundle\\": ""
     }
-  },
-  "target-dir": "WebDL/CrawltrackBundle"
+  }
 }
