@@ -6,9 +6,9 @@ Setup and Configuration
 
 First, install the bundle with Composer:
 
-.. code-block:: bash
-
-    $ composer require webdl/composer require webdl/crawltrack-bundle
+``` shell
+$ composer require webdl/composer require webdl/crawltrack-bundle
+```
 
 If everything worked, the ``WebDL/CrawltrackBundle`` can now be found
 at ``webdl/crawltrack-bundle``.
@@ -25,6 +25,14 @@ public function registerBundles()
     new WebDL\CrawltrackBundle\WebDLCrawltrackBundle(),
     // ...
 }
+```
+
+To be able to reach the bundle from your website, you have to add it to your routing page, for example:
+``` yaml
+wdl_crawltrack:
+    resource: "@WebDLCrawltrackBundle/Resources/config/routing.yml"
+    # Change prefix as you like
+    prefix: "/crwlt"
 ```
 
 Configuration: TODO
