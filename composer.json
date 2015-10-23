@@ -1,6 +1,6 @@
 {
   "name": "webdl/crawltrack-bundle",
-  "description": "This bundles provides its own implementation of Crawltrack directly in Symfony",
+  "description": "This bundle is used to track crawlers and robots in a Symfony app. It is based on Crawltrack",
   "keywords": [
     "crawltrack", "symfony2"
   ],
@@ -13,7 +13,7 @@
     }
   ],
   "require": {
-    "php": ">=5.3.0",
+    "php": ">=5.4.0",
     "symfony/symfony": "~2.7"
   },
   "suggest": {
