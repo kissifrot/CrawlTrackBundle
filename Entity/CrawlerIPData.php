@@ -34,16 +34,16 @@ class CrawlerIPData
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_single", type="boolean", options={"default":true}, nullable=false)
+     * @ORM\Column(name="single", type="boolean", options={"default":true}, nullable=false)
      */
-    private $isSingle;
+    private $single;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_range", type="boolean", options={"default":false}, nullable=false)
+     * @ORM\Column(name="range", type="boolean", options={"default":false}, nullable=false)
      */
-    private $isRange;
+    private $range;
 
     /**
      * Internal use only (for reference crawler data updates)
@@ -75,8 +75,8 @@ class CrawlerIPData
      */
     public function checkSingle() {
         if(preg_match('#[/\*-]+#', $this->ipAddress)) {
-            $this->isSingle = false;
-            $this->isRange = true;
+            $this->single = false;
+            $this->range = true;
         }
     }
 
@@ -116,26 +116,26 @@ class CrawlerIPData
     }
 
     /**
-     * Set isSingle
+     * Set single
      *
-     * @param boolean $isSingle
+     * @param boolean $single
      * @return CrawlerIPData
      */
-    public function setIsSingle($isSingle)
+    public function setSingle($single)
     {
-        $this->isSingle = $isSingle;
+        $this->single = $single;
 
         return $this;
     }
 
     /**
-     * Get isSingle
+     * Get single
      *
      * @return boolean 
      */
-    public function getIsSingle()
+    public function isSingle()
     {
-        return $this->isSingle;
+        return $this->single;
     }
 
     /**
@@ -162,26 +162,26 @@ class CrawlerIPData
     }
 
     /**
-     * Set isRange
+     * Set range
      *
-     * @param boolean $isRange
+     * @param boolean $range
      * @return CrawlerIPData
      */
-    public function setIsRange($isRange)
+    public function setRange($range)
     {
-        $this->isRange = $isRange;
+        $this->range = $range;
 
         return $this;
     }
 
     /**
-     * Get isRange
+     * Get range
      *
      * @return boolean 
      */
-    public function getIsRange()
+    public function isRange()
     {
-        return $this->isRange;
+        return $this->range;
     }
 
     /**

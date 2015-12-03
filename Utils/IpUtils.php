@@ -14,7 +14,7 @@ class IpUtils
      * @param $n
      * @return array
      */
-    private static function Float2LargeArray($n) {
+    private static function float2LargeArray($n) {
         $result = array();
         while ($n > 0) {
             array_push($result, ($n & 0xffff));
@@ -30,7 +30,7 @@ class IpUtils
      * @param $a
      * @return float
      */
-    private static function LargeArray2Float($a) {
+    private static function largeArray2Float($a) {
         $factor = 1.0;
         $result = 0.0;
         foreach ($a as $element) {
@@ -51,7 +51,7 @@ class IpUtils
      * @param $b
      * @return array
      */
-    private static function LargeArrayAND($a, $b) {
+    private static function largeArrayAND($a, $b) {
         $indexes = min(count($a), count($b));
         $c = array();
         for ($i=0; $i<$indexes; $i++) {
@@ -60,7 +60,7 @@ class IpUtils
         return $c;
     }
 
-    private static function LargeArrayOR($a, $b) {
+    private static function largeArrayOR($a, $b) {
         $indexes = max(count($a), count($b));
         $c = array();
         for ($i=0; $i<$indexes; $i++) {
@@ -71,35 +71,35 @@ class IpUtils
         return $c;
     }
 
-    private static function FloatAND($a, $b) {
+    private static function floatAND($a, $b) {
         return
-            self::LargeArray2Float(
-                self::LargeArrayAND( self::Float2LargeArray($a), self::Float2LargeArray($b) )
+            self::largeArray2Float(
+                self::largeArrayAND( self::Float2LargeArray($a), self::Float2LargeArray($b) )
             );
     }
 
-    private static function FloatOR($a, $b) {
+    private static function floatOR($a, $b) {
         return
-            self::LargeArray2Float(
-                self::LargeArrayOR( self::Float2LargeArray($a), self::Float2LargeArray($b) )
+            self::largeArray2Float(
+                self::largeArrayOR( self::float2LargeArray($a), self::float2LargeArray($b) )
             );
     }
     /**
      * @param $ipstring
      * @return float
      */
-    private static function IP2Float($ipstring) {
+    private static function iP2Float($ipstring) {
         $num = (float)sprintf("%u",ip2long($ipstring));
         return $num;
     }
 
-    private static function IP6FloatA($ipstring) {
+    private static function iP6FloatA($ipstring) {
         $ip6 = explode(':', $ipstring);
         $num = array_reverse($ip6); # We want the least significant as [0]
         return $num;
     }
 
-    private static function LargeBin2FloatA($binarystr) {
+    private static function largeBin2FloatA($binarystr) {
         $bits = str_split($binarystr, 16);
         $result = array();
         foreach ($bits as $bit) {
@@ -116,7 +116,7 @@ class IpUtils
      * @return bool
      * @throws \Exception
      */
-    public static function IPInRange($ip, $range) {
+    public static function iPInRange($ip, $range) {
         if (strpos($ip, '.') !== false) { // regular IPv4
             if (strpos($range, '/') !== false) {
                 // $range is in IP/NETMASK format
@@ -143,7 +143,7 @@ class IpUtils
 
                 }
 
-                return ( self::FloatAND(self::IP2Float($ip), $netmaskDec) == self::FloatAND(self::IP2Float($range), $netmaskDec) );
+                return ( self::floatAND(self::iP2Float($ip), $netmaskDec) == self::floatAND(self::iP2Float($range), $netmaskDec) );
             } else {
                 // range might be 255.255.*.* or 1.2.3.0-1.2.3.255
                 if (strpos($range, '*') !==false) { // a.b.*.* format
@@ -155,9 +155,9 @@ class IpUtils
 
                 if (strpos($range, '-')!==false) { // A-B format
                     list($lower, $upper) = explode('-', $range, 2);
-                    $lower_dec = self::IP2Float($lower);
-                    $upper_dec = self::IP2Float($upper);
-                    $ip_dec = self::IP2Float($ip);
+                    $lower_dec = self::iP2Float($lower);
+                    $upper_dec = self::iP2Float($upper);
+                    $ip_dec = self::iP2Float($ip);
                     return ( ($ip_dec>=$lower_dec) && ($ip_dec<=$upper_dec) );
                 }
 
@@ -177,7 +177,7 @@ class IpUtils
                 while(count($x) < 8) $x[] = '0';
                 $range = implode(':', $x);
             }
-            return ( self::LargeArrayAND(self::IP6FloatA($ip), self::LargeBin2FloatA($netmaskBinstr)) == self::LargeArrayAND(self::IP6FloatA($range), self::LargeBin2FloatA($netmaskBinstr)) );
+            return ( self::largeArrayAND(self::iP6FloatA($ip), self::largeBin2FloatA($netmaskBinstr)) == self::largeArrayAND(self::iP6FloatA($range), self::largeBin2FloatA($netmaskBinstr)) );
         }
 
         return false;

@@ -44,18 +44,18 @@ class Crawler
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_active", type="boolean", options={"default":false}, nullable=false)
+     * @ORM\Column(name="active", type="boolean", options={"default":false}, nullable=false)
      */
-    private $isActive;
+    private $active;
 
     /**
      * Is the crawler harmful? Used for scans and such
      *
      * @var boolean
      *
-     * @ORM\Column(name="is_harmful", type="boolean", options={"default":false}, nullable=false)
+     * @ORM\Column(name="harmful", type="boolean", options={"default":false}, nullable=false)
      */
-    private $isHarmful;
+    private $harmful;
 
     /**
      * Internal use only (for reference crawlers updates)
@@ -97,7 +97,7 @@ class Crawler
         $this->userAgents = new ArrayCollection();
         $this->ips = new ArrayCollection();
         $this->pageVisits = new ArrayCollection();
-        $this->isActive = true;
+        $this->active = true;
     }
 
     public function __toString() {
@@ -291,14 +291,14 @@ class Crawler
     }
 
     /**
-     * Set isActive
+     * Set active
      *
-     * @param boolean $isActive
+     * @param boolean $active
      * @return Crawler
      */
-    public function setIsActive($isActive)
+    public function setActive($active)
     {
-        $this->isActive = $isActive;
+        $this->active = $active;
 
         return $this;
     }
@@ -308,9 +308,9 @@ class Crawler
      *
      * @return boolean 
      */
-    public function getIsActive()
+    public function isActive()
     {
-        return $this->isActive;
+        return $this->active;
     }
 
     /**
@@ -337,25 +337,25 @@ class Crawler
     }
 
     /**
-     * Set isHarmful
+     * Set harmful
      *
-     * @param boolean $isHarmful
+     * @param boolean $harmful
      * @return Crawler
      */
-    public function setIsHarmful($isHarmful)
+    public function setHarmful($harmful)
     {
-        $this->isHarmful = $isHarmful;
+        $this->harmful = $harmful;
 
         return $this;
     }
 
     /**
-     * Get isHarmful
+     * Get harmful
      *
      * @return boolean 
      */
-    public function getIsHarmful()
+    public function isHarmful()
     {
-        return $this->isHarmful;
+        return $this->harmful;
     }
 }

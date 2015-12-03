@@ -6,8 +6,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use WebDL\CrawltrackBundle\Entity\Crawler;
-use WebDL\CrawltrackBundle\Entity\CrawlerIPData;
-use WebDL\CrawltrackBundle\Entity\CrawlerUAData;
 use WebDL\CrawltrackBundle\Form\CrawlerType;
 
 /**
