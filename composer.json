@@ -14,7 +14,7 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "symfony/symfony": "~2.7"
+    "symfony/symfony": "~2.7|~3.0"
   },
   "suggest": {
     "friendsofsymfony/user-bundle": "Allows users management"
