@@ -4,6 +4,7 @@
 namespace WebDL\CrawltrackBundle\Composer;
 
 use Composer\Script\CommandEvent;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
 
 /**

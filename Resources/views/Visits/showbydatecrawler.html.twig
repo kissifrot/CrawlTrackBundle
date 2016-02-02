@@ -6,7 +6,7 @@
     <h1>{{ crawler.name }}</h1>
     <h2>Visits for period {{ crawlDate }}</h2>
     {% if visits is not empty %}
-        <p>{{ visitsCount }} visit(s) counted</p>
+        <p>{{ visits.vCount }} visit(s) counted</p>
 
         {% if pagesCount > 1  %}
             <nav class="text-center">
@@ -25,7 +25,7 @@
                 <th>Page URL</th>
                 <th>Visit date</th>
             </tr>
-            {% for visit in visits %}
+            {% for visit in visits.data %}
                 <tr>
                     <td><a href="{{ visit.page.uri }}" target="_blank">{{ visit.page.uri }}</a></td>
                     <td>{{ visit.visitDate|date("m/d/Y H:i:s") }}</td>

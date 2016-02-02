@@ -103,10 +103,6 @@ class CrawlerController extends Controller
             throw $this->createNotFoundException('Unable to find Crawler entity.');
         }
 
-        $lastDays = 30;
-        $visitsHits = $em->getRepository('WebDLCrawltrackBundle:CrawlerVisit')->getForSpecificCrawlerLastDays($crawler, $lastDays);
-        $visitsPages = $em->getRepository('WebDLCrawltrackBundle:CrawlerVisit')->getPagesForSpecificCrawlerLastDays($crawler, $lastDays);
-
         $totalVisitsHits = $em->getRepository('WebDLCrawltrackBundle:CrawlerVisit')->getForSpecificCrawlerTotal($crawler);
         $totalVisitsPages = $em->getRepository('WebDLCrawltrackBundle:CrawlerVisit')->getPagesForSpecificCrawlerTotal($crawler);
 
@@ -124,13 +120,15 @@ class CrawlerController extends Controller
         return $this->render('WebDLCrawltrackBundle:Crawler:show.html.twig', array(
             'crawler'      => $crawler,
             'delete_form' => $deleteForm->createView(),
-            'visitsHits' => $visitsHits,
-            'visitsPages' => $visitsPages,
-            'totalVisitsHits' => $totalVisitsHits,
-            'totalVisitsPages' => $totalVisitsPages,
-            'chartCategories' => json_encode($chartCategories),
-            'chartHits' => json_encode($chartHits),
-            'chartPages' => json_encode($chartPages),
+            'visitsData' => array(
+                'totalHits' => $totalVisitsHits,
+                'totalPages' => $totalVisitsPages,
+            ),
+            'chartData' => array(
+                'categories' => json_encode($chartCategories),
+                'hits' => json_encode($chartHits),
+                'pages' => json_encode($chartPages),
+            ),
             'totalPages' => $totalPages
         ));
     }

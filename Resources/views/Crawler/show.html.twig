@@ -14,8 +14,8 @@
             <th>Part visited site</th>
         </tr>
         <tr>
-            <td>{{ totalVisitsHits }}</td>
-            <td>{{ totalVisitsPages }}</td>
+            <td>{{ visitsData.totalHits }}</td>
+            <td>{{ visitsData.totalPages }}</td>
             <td>??</td>
         </tr>
     </table>
@@ -39,7 +39,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="http://code.highcharts.com/4.1.9/highcharts.js"></script>
+    <script type="text/javascript" src="https://code.highcharts.com/4.2.1/highcharts.js"></script>
     <script type="text/javascript">
 
         $(function () {
@@ -55,7 +55,7 @@
                     text: 'Hits and page views of the last 30 days'
                 },
                 xAxis: {
-                    categories: {{ chartCategories|raw }},
+                    categories: {{ chartData.categories|raw }},
                     crosshair: true
                 },
                 yAxis: [{
@@ -78,17 +78,15 @@
                 },
                 series: [{
                     name: 'Hits',
-                    data: {{ chartHits }}
+                    data: {{ chartData.hits }}
 
                 }, {
                     name: 'Viewed pages',
-                    data: {{ chartPages }}
+                    data: {{ chartData.pages }}
 
                 }]
             });
         });
     </script>
-
-
 {% endblock %}
 

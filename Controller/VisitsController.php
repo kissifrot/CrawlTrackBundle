@@ -37,8 +37,10 @@ class VisitsController extends Controller
         return $this->render('WebDLCrawltrackBundle:Visits:showbydatecrawler.html.twig', array(
                 'crawler' => $crawler,
                 'crawlDate' => $date,
-                'visits' => $visits,
-                'visitsCount' => $visitsCount,
+                'visits' => array(
+                    'data' => $visits,
+                    'vCount' => $visitsCount
+                ),
                 'pagesCount' => $pagesCount,
                 'page' => $page
             )
