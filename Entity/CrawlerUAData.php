@@ -33,9 +33,9 @@ class CrawlerUAData
      *
      * @var boolean
      *
-     * @ORM\Column(name="is_exact", type="boolean", options={"default":true}, nullable=false)
+     * @ORM\Column(name="exact", type="boolean", options={"default":true}, nullable=false)
      */
-    private $isExact;
+    private $exact;
 
     /**
      * Indicates whether the UA is a Regexp or not
@@ -44,16 +44,16 @@ class CrawlerUAData
      *
      * @ORM\Column(name="is_regexp", type="boolean", options={"default":false}, nullable=false)
      */
-    private $isRegexp;
+    private $regexp;
 
     /**
      * Indicates whether the UA is partial or not
      *
      * @var boolean
      *
-     * @ORM\Column(name="is_partial", type="boolean", options={"default":false}, nullable=false)
+     * @ORM\Column(name="partial", type="boolean", options={"default":false}, nullable=false)
      */
-    private $isPartial;
+    private $partial;
 
     /**
      * Internal use only (for reference crawler data updates)
@@ -72,8 +72,8 @@ class CrawlerUAData
     protected $crawler;
 
     public function __construct() {
-        $this->isExact = true;
-        $this->isPartial = false;
+        $this->exact = true;
+        $this->partial = false;
     }
 
     public function __toString() {
@@ -84,8 +84,8 @@ class CrawlerUAData
      * @ORM\PrePersist
      */
     public function checkExact() {
-        if($this->isRegexp || $this->isPartial) {
-            $this->isExact = false;
+        if($this->regexp || $this->partial) {
+            $this->exact = false;
         }
     }
 
@@ -149,60 +149,60 @@ class CrawlerUAData
     }
 
     /**
-     * Set isRegexp
+     * Set regexp
      *
-     * @param boolean $isRegexp
+     * @param boolean $regexp
      * @return CrawlerUAData
      */
-    public function setIsRegexp($isRegexp)
+    public function setRegexp($regexp)
     {
-        $this->isRegexp = $isRegexp;
+        $this->regexp = $regexp;
 
         return $this;
     }
 
     /**
-     * Get isRegexp
+     * Get regexp
      *
      * @return boolean 
      */
-    public function getIsRegexp()
+    public function isRegexp()
     {
-        return $this->isRegexp;
+        return $this->regexp;
     }
 
     /**
-     * Set isPartial
+     * Set partial
      *
-     * @param boolean $isPartial
+     * @param boolean $partial
      * @return CrawlerUAData
      */
-    public function setIsPartial($isPartial)
+    public function setPartial($partial)
     {
-        $this->isPartial = $isPartial;
+        $this->partial = $partial;
 
         return $this;
     }
 
     /**
-     * Get isPartial
+     * Get partial
      *
      * @return boolean 
      */
-    public function getIsPartial()
+    public function isPartial()
     {
-        return $this->isPartial;
+        return $this->partial;
     }
 
     /**
-     * Set isExact
+     * Set exact
      *
-     * @param boolean $isExact
+     * @param boolean $exact
      * @return CrawlerUAData
      */
-    public function setIsExact($isExact)
+    public function setIsExact($exact)
     {
-        $this->isExact = $isExact;
+        $this->exact = $exact;
 
         return $this;
     }
@@ -212,9 +212,9 @@ class CrawlerUAData
      *
      * @return boolean 
      */
-    public function getIsExact()
+    public function isExact()
     {
-        return $this->isExact;
+        return $this->exact;
     }
 
     /**
