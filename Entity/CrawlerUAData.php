@@ -200,7 +200,7 @@ class CrawlerUAData
      * @param boolean $exact
      * @return CrawlerUAData
      */
-    public function setIsExact($exact)
+    public function setExact($exact)
     {
         $this->exact = $exact;
 

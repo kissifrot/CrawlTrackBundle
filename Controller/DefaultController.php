@@ -4,7 +4,6 @@ namespace WebDL\CrawltrackBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use WebDL\CrawltrackBundle\Entity\Crawler;
 
 class DefaultController extends Controller
 {
