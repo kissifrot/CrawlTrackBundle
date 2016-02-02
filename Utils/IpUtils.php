@@ -78,12 +78,6 @@ class IpUtils
             );
     }
 
-    private static function floatOR($a, $b) {
-        return
-            self::largeArray2Float(
-                self::largeArrayOR( self::float2LargeArray($a), self::float2LargeArray($b) )
-            );
-    }
     /**
      * @param $ipstring
      * @return float
@@ -128,7 +122,7 @@ class IpUtils
                     $netmask = implode('.', $nets);
                     // by now we have ensured that we have 4 octets of the netmask a.b.c.d
                     $netmask = str_replace('*', '0', $netmask);
-                    $netmaskDec = self::IP2Float($netmask);
+                    $netmaskDec = self::iP2Float($netmask);
                 } else {
                     // $netmask is a CIDR size block
                     // fix the range argument
