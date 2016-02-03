@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\IpUtils as SfIpUtils;
 use WebDL\CrawltrackBundle\Utils\IpUtils as WDLIpUtils;
 use WebDL\CrawltrackBundle\Entity\CrawledPage;
-use WebDL\CrawltrackBundle\Entity\Crawler;
 use WebDL\CrawltrackBundle\Entity\CrawlerVisit;
 
 class CrawlerTracker {
@@ -27,11 +26,10 @@ class CrawlerTracker {
      *
      * @param string $ip IP(v4/v6) of the crawler
      * @param string $userAgent User Agent of the crawler
-     * @param string $referer Referer URL (not used atm)
      * @param string $uri Page visited URI
      * @return bool
      */
-    public function track($ip, $userAgent, $referer, $uri) {
+    public function track($ip, $userAgent, $uri) {
         $this->crawlerFound = $this->em->getRepository('WebDLCrawltrackBundle:Crawler')->findByExactIPOrUA($ip, $userAgent);
         if(!$this->crawlerFound) {
             // We didn't find exact IP or UA, let's check for more complex (slower), starting with IP

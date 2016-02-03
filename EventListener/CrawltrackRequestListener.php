@@ -32,9 +32,9 @@ class CrawltrackRequestListener {
             }
             $ip = $request->getClientIp();
             $userAgent = $request->headers->get('User-Agent');
-            $referer = $request->headers->get('referer');
+            // $referer = $request->headers->get('referer'); <-- Not used for now
 
-            $this->ct->track($ip, $userAgent, $referer, $uri);
+            $this->ct->track($ip, $userAgent, $uri);
 
         }
     }
