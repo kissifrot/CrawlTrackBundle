@@ -24,5 +24,12 @@ class WebDLCrawltrackExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        if(isset($config['db_table_prefix'])) {
+            $container->setParameter('webdl_crawltrack.db_table_prefix', $config['db_table_prefix']);
+        }
+        if(isset($config['use_reverse_dns'])) {
+            $container->setParameter('webdl_crawltrack.use_reverse_dns', $config['use_reverse_dns']);
+        }
     }
 }

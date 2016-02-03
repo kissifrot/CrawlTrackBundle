@@ -1,11 +1,11 @@
 parameters:
-    crawltrackbundle.db.table_prefix: crwlt_
+    webdl_crawltrack.db_table_prefix: crwlt_
 
 services:
 
     webdl_crawltrack.tblprefix_subscriber:
         class: WebDL\CrawltrackBundle\Subscriber\TablePrefixSubscriber
-        arguments: [%crawltrackbundle.db.table_prefix%]
+        arguments: [%webdl_crawltrack.db_table_prefix%]
         tags:
             - { name: doctrine.event_subscriber }
 

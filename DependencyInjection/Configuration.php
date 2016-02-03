@@ -20,16 +20,16 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('webdl_crawltrack');
 
-        /*
         $rootNode
             ->children()
-            ->scalarNode('use_reverse_dns')
-            ->info('Use reverse DNS check to check if the IP used are really valid. Can slow your site down a lot')
-            ->defaultFalse()
-            ->isRequired()
-            ->cannotBeEmpty()
-            ->end()
-            ->end();*/
+                ->booleanNode('use_reverse_dns')
+                    ->info('Use reverse DNS check to check if the IP used are really valid. Needs AMQP to be installed')
+                    ->defaultFalse()
+                ->end()
+                ->scalarNode('db_table_prefix')
+                    ->info('Table prefix for this bundle')
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }
