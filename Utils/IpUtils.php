@@ -18,7 +18,7 @@ class IpUtils
         $result = array();
         while ($n > 0) {
             array_push($result, ($n & 0xffff));
-            list($n, $dummy) = explode('.', sprintf("%F", $n/65536.0));
+            list($n, ) = explode('.', sprintf("%F", $n/65536.0));
             # note we don't want to use "%0.F" as it will get rounded which is bad.
         }
         return $result;
@@ -37,7 +37,7 @@ class IpUtils
             $result += ($factor * $element);
             $factor = $factor << 16;
         }
-        list($result, $dummy) = explode('.', sprintf("%F", $result));
+        list($result, ) = explode('.', sprintf("%F", $result));
         return $result;
     }
 
@@ -56,17 +56,6 @@ class IpUtils
         $c = array();
         for ($i=0; $i<$indexes; $i++) {
             array_push($c, $a[$i] & $b[$i]);
-        }
-        return $c;
-    }
-
-    private static function largeArrayOR($a, $b) {
-        $indexes = max(count($a), count($b));
-        $c = array();
-        for ($i=0; $i<$indexes; $i++) {
-            if (!isset($a[$i])) $a[$i] = 0;
-            if (!isset($b[$i])) $b[$i] = 0;
-            array_push($c, $a[$i] | $b[$i]);
         }
         return $c;
     }
