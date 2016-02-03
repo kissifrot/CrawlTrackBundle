@@ -30,9 +30,9 @@ class CrawlerRepository extends EntityRepository
 
     public function findByExactIPOrUA($ip, $ua = null) {
         $qb = $this->createQueryBuilder('c')
-            ->leftJoin('c.ips', 'ipaddr', Expr\Join::WITH, 'ipaddr.isSingle = :isSingleOrExact')
-            ->leftJoin('c.userAgents', 'uas', Expr\Join::WITH, 'uas.isExact = :isSingleOrExact')
-            ->where('c.isActive = :isActive')
+            ->leftJoin('c.ips', 'ipaddr', Expr\Join::WITH, 'ipaddr.single = :isSingleOrExact')
+            ->leftJoin('c.userAgents', 'uas', Expr\Join::WITH, 'uas.exact = :isSingleOrExact')
+            ->where('c.active = :isActive')
             ->andWhere('ipaddr.ipAddress = :ip');
         if(!empty($ua)) {
             $qb->orWhere('uas.userAgent = :ua')
@@ -58,8 +58,8 @@ class CrawlerRepository extends EntityRepository
      */
     public function findByIPRanges() {
         $qb = $this->createQueryBuilder('c')
-            ->where('c.isActive = :isActive')
-            ->innerJoin('c.ips', 'ipaddresses', Expr\Join::WITH, 'ipaddresses.isSingle = :isSingle')
+            ->where('c.active = :isActive')
+            ->innerJoin('c.ips', 'ipaddresses', Expr\Join::WITH, 'ipaddresses.single = :isSingle')
             ->setParameter('isActive', true)
             ->setParameter('isSingle', false)
             ->addSelect('ipaddresses');
@@ -76,11 +76,11 @@ class CrawlerRepository extends EntityRepository
      */
     public function findByComplexUAs() {
         $qb = $this->createQueryBuilder('c')
-            ->where('c.isActive = :isActive')
-            ->innerJoin('c.userAgents', 'uas', Expr\Join::WITH, 'uas.isExact = :isExact')
+            ->where('c.active = :isActive')
+            ->innerJoin('c.userAgents', 'uas', Expr\Join::WITH, 'uas.exact = :isExact')
             ->setParameter('isActive', true)
             ->setParameter('isExact', false)
-            ->orderBy('uas.isRegexp', 'DESC') // results with regexp should appear first
+            ->orderBy('uas.regexp', 'DESC') // results with regexp should appear first
             ->addSelect('uas');
         return $qb->getQuery()
             ->useQueryCache(true)
