@@ -8,12 +8,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Crawler
- *
  * @ORM\Table(name="crawler",uniqueConstraints={@ORM\UniqueConstraint(name="crawler_name_idx", columns={"name"})})
- * @ORM\Entity(repositoryClass="WebDL\CrawltrackBundle\Entity\CrawlerRepository")
+ * @ORM\Entity(repositoryClass="WebDL\CrawltrackBundle\Repository\CrawlerRepository")
  * @UniqueEntity("name")
- *
  */
 class Crawler
 {
@@ -27,52 +24,40 @@ class Crawler
     private $id;
 
     /**
-     * @var string
-     *
      * @Assert\NotBlank()
-     * @ORM\Column(name="name", type="string", length=150, unique=true)
+     * @ORM\Column(length=150, unique=true)
      */
     private $name;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="active", type="boolean", options={"default":false}, nullable=false)
+     * @ORM\Column(type="boolean", options={"default":false}, nullable=false)
      */
     private $active;
 
     /**
      * Is the crawler harmful? Used for scans and such
      *
-     * @var boolean
-     *
-     * @ORM\Column(name="harmful", type="boolean", options={"default":false}, nullable=false)
+     * @ORM\Column(type="boolean", options={"default":false}, nullable=false)
      */
     private $harmful;
 
     /**
      * Internal use only (for reference crawlers updates)
-     *
-     * @var string
      * @internal
      *
-     * @ORM\Column(name="ref_hash", type="string", length=13, nullable=true)
+     * @ORM\Column(length=36, nullable=true)
      */
-    private $refHash;
+    private $uuid;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="official_url", type="string", length=250, nullable=true)
+     * @ORM\Column(length=250, nullable=true)
      */
-    private $officialURL;
+    private $officialUrl;
 
     /**
      * @ORM\OneToMany(targetEntity="CrawlerIPData", mappedBy="crawler", cascade={"persist", "remove"})
@@ -89,9 +74,6 @@ class Crawler
      */
     private $pageVisits;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->userAgents = new ArrayCollection();
@@ -100,261 +82,124 @@ class Crawler
         $this->active = true;
     }
 
-    public function __toString() {
+    public function __toString(): string
+    {
         return $this->name;
     }
 
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Crawler
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Add pageVisit
-     *
-     * @param \WebDL\CrawltrackBundle\Entity\CrawlerVisit $pageVisit
-     *
-     * @return Crawler
-     */
-    public function addPageVisit(\WebDL\CrawltrackBundle\Entity\CrawlerVisit $pageVisit)
+    public function addPageVisit(CrawlerVisit $pageVisit): void
     {
-        $this->pageVisits[] = $pageVisit;
-
-        return $this;
+        $this->pageVisits->add($pageVisit);
     }
 
-    /**
-     * Remove pageVisit
-     *
-     * @param \WebDL\CrawltrackBundle\Entity\CrawlerVisit $pageVisit
-     */
-    public function removePageVisit(\WebDL\CrawltrackBundle\Entity\CrawlerVisit $pageVisit)
+    public function removePageVisit(CrawlerVisit $pageVisit): void
     {
         $this->pageVisits->removeElement($pageVisit);
     }
 
-    /**
-     * Get pageVisits
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPageVisits()
+    public function getPageVisits(): ArrayCollection
     {
         return $this->pageVisits;
     }
 
-    /**
-     * Set officialURL
-     *
-     * @param string $officialURL
-     *
-     * @return Crawler
-     */
-    public function setOfficialURL($officialURL)
+    public function setOfficialUrl(?string $officialUrl): void
     {
-        $this->officialURL = $officialURL;
-
-        return $this;
+        $this->officialUrl = $officialUrl;
     }
 
-    /**
-     * Get officialURL
-     *
-     * @return string
-     */
-    public function getOfficialURL()
+    public function getOfficialUrl(): ?string
     {
-        return $this->officialURL;
+        return $this->officialUrl;
     }
 
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return Crawler
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
-
-        return $this;
     }
 
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * Add ips
-     *
-     * @param \WebDL\CrawltrackBundle\Entity\CrawlerIPData $ips
-     * @return Crawler
-     */
-    public function addIp(\WebDL\CrawltrackBundle\Entity\CrawlerIPData $ips)
+    public function addIp(CrawlerIPData $ips): void
     {
         $ips->setCrawler($this);
-
-        $this->ips[] = $ips;
-
-        return $this;
+        $this->ips->add($ips);
     }
 
-    /**
-     * Remove ips
-     *
-     * @param \WebDL\CrawltrackBundle\Entity\CrawlerIPData $ips
-     */
-    public function removeIp(\WebDL\CrawltrackBundle\Entity\CrawlerIPData $ips)
+    public function removeIp(CrawlerIPData $ips): void
     {
         $this->ips->removeElement($ips);
     }
 
-    /**
-     * Get ips
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getIps()
+    public function getIps(): ArrayCollection
     {
         return $this->ips;
     }
 
-    /**
-     * Add userAgents
-     *
-     * @param \WebDL\CrawltrackBundle\Entity\CrawlerUAData $userAgents
-     * @return Crawler
-     */
-    public function addUserAgent(\WebDL\CrawltrackBundle\Entity\CrawlerUAData $userAgents)
+    public function addUserAgent(CrawlerUAData $userAgent): void
     {
-        $userAgents->setCrawler($this);
-
-        $this->userAgents[] = $userAgents;
-
-        return $this;
+        $userAgent->setCrawler($this);
+        $this->userAgents->add($userAgent);
     }
 
-    /**
-     * Remove userAgents
-     *
-     * @param \WebDL\CrawltrackBundle\Entity\CrawlerUAData $uAs
-     */
-    public function removeUserAgent(\WebDL\CrawltrackBundle\Entity\CrawlerUAData $userAgents)
+    public function removeUserAgent(CrawlerUAData $userAgents): void
     {
         $this->userAgents->removeElement($userAgents);
     }
 
-    /**
-     * Get userAgents
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getUserAgents()
+    public function getUserAgents(): ArrayCollection
     {
         return $this->userAgents;
     }
 
-    /**
-     * Set active
-     *
-     * @param boolean $active
-     * @return Crawler
-     */
-    public function setActive($active)
+    public function activate(): void
     {
-        $this->active = $active;
-
-        return $this;
+        $this->active = true;
     }
 
-    /**
-     * Get isActive
-     *
-     * @return boolean 
-     */
-    public function isActive()
+    public function deactivate(): void
+    {
+        $this->active = false;
+    }
+
+    public function isActive(): bool
     {
         return $this->active;
     }
 
-    /**
-     * Set refHash
-     *
-     * @param string $refHash
-     * @return Crawler
-     */
-    public function setRefHash($refHash)
+    public function setUuid(string $uuid): void
     {
-        $this->refHash = $refHash;
-
-        return $this;
+        $this->uuid = $uuid;
     }
 
-    /**
-     * Get refHash
-     *
-     * @return string 
-     */
-    public function getRefHash()
+    public function getUuid(): ?string
     {
-        return $this->refHash;
+        return $this->uuid;
     }
 
-    /**
-     * Set harmful
-     *
-     * @param boolean $harmful
-     * @return Crawler
-     */
-    public function setHarmful($harmful)
+    public function setHarmful(bool $harmful): void
     {
         $this->harmful = $harmful;
-
-        return $this;
     }
 
-    /**
-     * Get harmful
-     *
-     * @return boolean 
-     */
-    public function isHarmful()
+    public function isHarmful(): bool
     {
         return $this->harmful;
     }

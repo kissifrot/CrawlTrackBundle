@@ -2,19 +2,16 @@
 
 namespace WebDL\CrawltrackBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CrawledPage
- *
  * @ORM\Table(name="crawled_page", uniqueConstraints={@ORM\UniqueConstraint(name="crawler_uri_idx", columns={"uri"})})
- * @ORM\Entity(repositoryClass="WebDL\CrawltrackBundle\Entity\CrawledPageRepository")
+ * @ORM\Entity(repositoryClass="WebDL\CrawltrackBundle\Repository\CrawledPageRepository")
  */
 class CrawledPage
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -22,8 +19,6 @@ class CrawledPage
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="uri", type="string", length=255)
      */
     private $uri;
@@ -33,79 +28,37 @@ class CrawledPage
      */
     protected $visits;
 
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
-        $this->visits = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->visits = new ArrayCollection();
     }
 
-    /**
-     * Add visit
-     *
-     * @param \WebDL\CrawltrackBundle\Entity\CrawlerVisit $visit
-     *
-     * @return CrawledPage
-     */
-    public function addVisit(\WebDL\CrawltrackBundle\Entity\CrawlerVisit $visit)
+    public function addVisit(CrawlerVisit $visit): void
     {
         $this->visits[] = $visit;
-
-        return $this;
     }
 
-    /**
-     * Remove visit
-     *
-     * @param \WebDL\CrawltrackBundle\Entity\CrawlerVisit $visit
-     */
-    public function removeVisit(\WebDL\CrawltrackBundle\Entity\CrawlerVisit $visit)
+    public function removeVisit(CrawlerVisit $visit): void
     {
         $this->visits->removeElement($visit);
     }
 
-    /**
-     * Get visits
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getVisits()
+    public function getVisits(): iterable
     {
         return $this->visits;
     }
 
-    /**
-     * Set uri
-     *
-     * @param string $uri
-     *
-     * @return CrawledPage
-     */
-    public function setUri($uri)
+    public function setUri(string $uri): void
     {
         $this->uri = $uri;
-
-        return $this;
     }
 
-    /**
-     * Get uri
-     *
-     * @return string
-     */
-    public function getUri()
+    public function getUri(): string
     {
         return $this->uri;
     }

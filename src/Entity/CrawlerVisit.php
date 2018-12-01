@@ -8,13 +8,11 @@ use Doctrine\ORM\Mapping as ORM;
  * CrawlerVisit
  *
  * @ORM\Table(name="crawler_visit")
- * @ORM\Entity(repositoryClass="WebDL\CrawltrackBundle\Entity\CrawlerVisitRepository")
+ * @ORM\Entity(repositoryClass="WebDL\CrawltrackBundle\Repository\CrawlerVisitRepository")
  */
 class CrawlerVisit
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -22,25 +20,17 @@ class CrawlerVisit
     private $id;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="visit_date", type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      */
     private $visitDate;
 
-
     /**
-     * @var string
-     *
-     * @ORM\Column(name="from_ip", type="string", length=40)
+     * @ORM\Column(name="from_ip", length=40)
      */
     private $fromIP;
 
-
     /**
-     * @var string
-     *
-     * @ORM\Column(name="from_ua", type="string", length=255, nullable=true)
+     * @ORM\Column(name="from_ua", length=255, nullable=true)
      */
     private $fromUA;
 
@@ -56,126 +46,51 @@ class CrawlerVisit
      */
     protected $page;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
-        $this->visitDate = new \DateTime();
+        $this->visitDate = new \DateTimeImmutable();
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set visitDate
-     *
-     * @param \DateTime $visitDate
-     *
-     * @return CrawlerVisit
-     */
-    public function setVisitDate($visitDate)
-    {
-        $this->visitDate = $visitDate;
-
-        return $this;
-    }
-
-    /**
-     * Get visitDate
-     *
-     * @return \DateTime
-     */
-    public function getVisitDate()
+    public function getVisitDate(): \DateTimeImmutable
     {
         return $this->visitDate;
     }
 
-    /**
-     * Set crawler
-     *
-     * @param \WebDL\CrawltrackBundle\Entity\Crawler $crawler
-     *
-     * @return CrawlerVisit
-     */
-    public function setCrawler(\WebDL\CrawltrackBundle\Entity\Crawler $crawler = null)
+    public function setCrawler(?Crawler $crawler): void
     {
         $this->crawler = $crawler;
-
-        return $this;
     }
 
-    /**
-     * Get crawler
-     *
-     * @return \WebDL\CrawltrackBundle\Entity\Crawler
-     */
-    public function getCrawler()
+    public function getCrawler(): ?Crawler
     {
         return $this->crawler;
     }
 
-    /**
-     * Set page
-     *
-     * @param \WebDL\CrawltrackBundle\Entity\CrawledPage $page
-     *
-     * @return CrawlerVisit
-     */
-    public function setPage(\WebDL\CrawltrackBundle\Entity\CrawledPage $page = null)
+    public function setPage(?CrawledPage $page): void
     {
         $this->page = $page;
-
-        return $this;
     }
 
-    /**
-     * Get page
-     *
-     * @return \WebDL\CrawltrackBundle\Entity\CrawledPage
-     */
-    public function getPage()
+    public function getPage(): ?CrawledPage
     {
         return $this->page;
     }
 
-    /**
-     * Set fromIP
-     *
-     * @param string $fromIP
-     *
-     * @return CrawlerVisit
-     */
-    public function setFromIP($fromIP)
+    public function setFromIP(string $fromIP): void
     {
         $this->fromIP = $fromIP;
-
-        return $this;
     }
 
-    /**
-     * Get fromIP
-     *
-     * @return string
-     */
-    public function getFromIP()
+    public function getFromIP(): string
     {
         return $this->fromIP;
     }
 
-    /**
-     * Set fromUA
-     *
-     * @param string $fromUA
-     * @return CrawlerVisit
-     */
     public function setFromUA($fromUA)
     {
         $this->fromUA = $fromUA;
@@ -183,22 +98,7 @@ class CrawlerVisit
         return $this;
     }
 
-    /**
-     * Get fromUA
-     *
-     * @return string 
-     */
-    public function getFromUP()
-    {
-        return $this->fromUA;
-    }
-
-    /**
-     * Get fromUA
-     *
-     * @return string 
-     */
-    public function getFromUA()
+    public function getFromUA(): ?string
     {
         return $this->fromUA;
     }

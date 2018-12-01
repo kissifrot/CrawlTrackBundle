@@ -3,38 +3,35 @@
 namespace WebDL\CrawltrackBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use WebDL\CrawltrackBundle\Entity\CrawlerUAData;
 
 class CrawlerUADataType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('userAgent')
-            ->add('isRegexp', null, array(
-                'label'  => 'Is User Agent a Regexp ?',
+            ->add('isRegexp', CheckboxType::class, [
+                'label'    => 'Is User Agent a Regexp ?',
                 'required' => false
-            ))
-            ->add('isPartial', null, array(
-                'label'  => 'Do we have a partial match? (LIKE %..% will be used)',
+            ])
+            ->add('isPartial', CheckboxType::class, [
+                'label'    => 'Do we have a partial match? (LIKE %..% will be used)',
                 'required' => false
-            ))
-        ;
+            ]);
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'WebDL\CrawltrackBundle\Entity\CrawlerUAData'
-        ));
+        $resolver->setDefaults([
+            'data_class' => CrawlerUAData::class
+        ]);
     }
 
     /**

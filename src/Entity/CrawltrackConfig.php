@@ -7,18 +7,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * CrawltrackConfig entity, stores config in key/value pairs
+ * CrawltrackConfig entity, Stores config in key/value pairs
  *
  * @ORM\Table(name="crawltrack_cfg")
- * @ORM\Entity(repositoryClass="WebDL\CrawltrackBundle\Entity\CrawlerRepository")
+ * @ORM\Entity(repositoryClass="WebDL\CrawltrackBundle\Repository\CrawlerRepository")
  * @UniqueEntity("name")
- *
  */
 class CrawltrackConfig
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -26,79 +23,42 @@ class CrawltrackConfig
     private $id;
 
     /**
-     * @var string
-     *
      * @Assert\NotBlank()
-     * @ORM\Column(name="name", type="string", length=150, unique=true)
+     * @ORM\Column(length=150, unique=true)
      */
     private $name;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="value", type="string", length=150, nullable=false)
+     * @ORM\Column(length=150, nullable=false)
      */
     private $value;
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->name . ':' . $this->value;
     }
 
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return CrawltrackConfig
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set value
-     *
-     * @param string $value
-     *
-     * @return CrawltrackConfig
-     */
-    public function setValue($value)
+    public function setValue(string $value): void
     {
         $this->value = $value;
-
-        return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }

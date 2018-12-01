@@ -1,23 +1,24 @@
 <?php
 
-namespace WebDL\CrawltrackBundle\Entity;
+namespace WebDL\CrawltrackBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr;
+use WebDL\CrawltrackBundle\Entity\Crawler;
 
-/**
- * CrawlerRepository
- *
- */
-class CrawlerRepository extends EntityRepository
+class CrawlerRepository extends ServiceEntityRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Crawler::class);
+    }
+
     /**
-     * Exact equivalent of find() but with cache
-     * @param $id
-     * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findById($id) {
+    public function findById(int $id): ?Crawler
+    {
         $q = $this->createQueryBuilder('c')
             ->where('c.id = :id')
             ->setParameter('id', $id)
@@ -28,13 +29,14 @@ class CrawlerRepository extends EntityRepository
         return $q->getOneOrNullResult();
     }
 
-    public function findByExactIPOrUA($ip, $ua = null) {
+    public function findByExactIPOrUA(string $ip, ?string $ua = null): ?Crawler
+    {
         $qb = $this->createQueryBuilder('c')
             ->leftJoin('c.ips', 'ipaddr', Expr\Join::WITH, 'ipaddr.single = :isSingleOrExact')
             ->leftJoin('c.userAgents', 'uas', Expr\Join::WITH, 'uas.exact = :isSingleOrExact')
             ->where('c.active = :isActive')
             ->andWhere('ipaddr.ipAddress = :ip');
-        if(!empty($ua)) {
+        if (!empty($ua)) {
             $qb->orWhere('uas.userAgent = :ua')
             ->setParameter('ua', $ua);
         }
@@ -54,9 +56,9 @@ class CrawlerRepository extends EntityRepository
 
     /**
      * Get a list of crawlers and their associated IP ranges
-     * @return array
      */
-    public function findByIPRanges() {
+    public function findByIPRanges(): array
+    {
         $qb = $this->createQueryBuilder('c')
             ->where('c.active = :isActive')
             ->innerJoin('c.ips', 'ipaddresses', Expr\Join::WITH, 'ipaddresses.single = :isSingle')
@@ -72,9 +74,9 @@ class CrawlerRepository extends EntityRepository
 
     /**
      * Get a list of crawlers and their associated "complex" user agents
-     * @return array
      */
-    public function findByComplexUAs() {
+    public function findByComplexUAs(): array
+    {
         $qb = $this->createQueryBuilder('c')
             ->where('c.active = :isActive')
             ->innerJoin('c.userAgents', 'uas', Expr\Join::WITH, 'uas.exact = :isExact')
@@ -89,7 +91,8 @@ class CrawlerRepository extends EntityRepository
             ->getArrayResult();
     }
 
-    public function getForSpecificDate($date) {
+    public function getForSpecificDate(string $date): array
+    {
         return $this->createQueryBuilder('c')
             ->innerJoin('c.pageVisits', 'pv', Expr\Join::WITH, 'SUBSTRING(pv.visitDate, 1, 10) = :date')
             ->addSelect('pv')

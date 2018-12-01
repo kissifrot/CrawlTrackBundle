@@ -17,7 +17,6 @@ class CrawlerController extends Controller
 
     /**
      * Lists all Crawler entities.
-     *
      */
     public function indexAction()
     {
@@ -32,7 +31,6 @@ class CrawlerController extends Controller
 
     /**
      * Creates a new Crawler entity.
-     *
      */
     public function createAction(Request $request)
     {
@@ -56,12 +54,8 @@ class CrawlerController extends Controller
 
     /**
      * Creates a form to create a Crawler entity.
-     *
-     * @param Crawler $crawler The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Crawler $crawler)
+    private function createCreateForm(Crawler $crawler): \Symfony\Component\Form\FormInterface
     {
         $form = $this->createForm(new CrawlerType(), $crawler, array(
             'action' => $this->generateUrl('crawler_create'),
@@ -75,7 +69,6 @@ class CrawlerController extends Controller
 
     /**
      * Displays a form to create a new Crawler entity.
-     *
      */
     public function newAction()
     {

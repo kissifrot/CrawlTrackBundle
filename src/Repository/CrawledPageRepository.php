@@ -1,13 +1,20 @@
 <?php
 
-namespace WebDL\CrawltrackBundle\Entity;
+namespace WebDL\CrawltrackBundle\Repository;
 
-/**
- * CrawledPageRepository
- */
-class CrawledPageRepository extends \Doctrine\ORM\EntityRepository
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use WebDL\CrawltrackBundle\Entity\CrawledPage;
+
+class CrawledPageRepository extends ServiceEntityRepository
 {
-    public function findByURI($uri) {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, CrawledPage::class);
+    }
+
+    public function findByURI(string $uri): ?CrawledPage
+    {
         $qb = $this->createQueryBuilder('cp')
             ->where('cp.uri = :uri')
             ->setParameter('uri', $uri);
@@ -21,7 +28,8 @@ class CrawledPageRepository extends \Doctrine\ORM\EntityRepository
         }
     }
 
-    public function getTotalCount() {
+    public function getTotalCount()
+    {
         return $this->createQueryBuilder('cp')
             ->select('COUNT(cp)')
             ->getQuery()
