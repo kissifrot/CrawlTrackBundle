@@ -14,9 +14,12 @@
   ],
   "require": {
     "php": "^7.1",
-    "symfony/symfony": "4.*",
+    "symfony/framework-bundle": "4.*",
     "doctrine/doctrine-bundle": "*",
     "doctrine/orm": "*"
+  },
+  "require-dev": {
+    "symfony/phpunit-bridge": "4.*"
   },
   "suggest": {
     "friendsofsymfony/user-bundle": "Allows users management"

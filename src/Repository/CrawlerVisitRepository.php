@@ -57,7 +57,7 @@ class CrawlerVisitRepository extends ServiceEntityRepository
             ->groupBy('dateVisit')
             ->orderBy('dateVisit', 'ASC')
             ->setParameter('crawler', $crawler)
-            ->setParameter('date', (new \DateTime())->sub(new \DateInterval('P' . $diffDays . 'D')))
+            ->setParameter('date', (new \DateTimeImmutable())->sub(new \DateInterval('P' . $diffDays . 'D')))
             ->getQuery()
             ->getArrayResult();
     }
@@ -72,7 +72,7 @@ class CrawlerVisitRepository extends ServiceEntityRepository
             ->groupBy('dateVisit')
             ->orderBy('dateVisit', 'ASC')
             ->setParameter('crawler', $crawler)
-            ->setParameter('date', (new \DateTime())->sub(new \DateInterval('P' . $diffDays . 'D')))
+            ->setParameter('date', (new \DateTimeImmutable())->sub(new \DateInterval('P' . $diffDays . 'D')))
             ->getQuery()
             ->getArrayResult();
     }

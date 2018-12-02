@@ -2,8 +2,9 @@
 
 namespace WebDL\CrawltrackBundle\Tracker;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\IpUtils as SfIpUtils;
+use WebDL\CrawltrackBundle\Entity\Crawler;
 use WebDL\CrawltrackBundle\Utils\IpUtils as WDLIpUtils;
 use WebDL\CrawltrackBundle\Entity\CrawledPage;
 use WebDL\CrawltrackBundle\Entity\CrawlerVisit;
@@ -14,22 +15,17 @@ class CrawlerTracker
 
     private $crawlerFound;
 
-    public function __construct(ObjectManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
 
     /**
-     * Store the robot visit, If crawler data match (first exact match, then more complex match with IP ranges and UAs)
-     *
-     * @param string $ip IP(v4/v6) of the crawler
-     * @param string $userAgent User Agent of the crawler
-     * @param string $uri Page visited URI
-     * @return bool
+     * Store the robot visit, Try to match the most exact crawler first, then do more complex match with IP ranges and UAs)
      */
     public function track($ip, $userAgent, $uri)
     {
-        $this->crawlerFound = $this->em->getRepository('WebDLCrawltrackBundle:Crawler')->findByExactIPOrUA($ip, $userAgent);
+        $this->crawlerFound = $this->em->getRepository(Crawler::class)->findByExactIPOrUA($ip, $userAgent);
         if (!$this->crawlerFound) {
             // We didn't find exact IP or UA, let's check for more complex (slower), starting with IP
             if (!$this->checkByIP($ip)) {
@@ -47,7 +43,7 @@ class CrawlerTracker
 
         if ($this->crawlerFound) {
             // Crawler found, we can check the page the crawler passed on
-            $page = $this->em->getRepository('WebDLCrawltrackBundle:CrawledPage')->findByURI($uri);
+            $page = $this->em->getRepository(CrawledPage::class)->findByURI($uri);
             if (!$page) {
                 $page = new CrawledPage();
                 $page->setUri($uri);
@@ -80,7 +76,7 @@ class CrawlerTracker
      */
     private function checkByIP($ip): bool
     {
-        $crawlersWithIPRange = $this->em->getRepository('WebDLCrawltrackBundle:Crawler')->findByIPRanges();
+        $crawlersWithIPRange = $this->em->getRepository(Crawler::class)->findByIPRanges();
         if (!$crawlersWithIPRange) {
             return false;
         }
@@ -90,7 +86,7 @@ class CrawlerTracker
             foreach ($crawlerWithIPRange['ips'] as $ipData) {
                 if ($this->isWithinIPRange($ip, $ipData['ipAddress'])) {
                     // Load the corresponding Crawler entity, as we need an entity object to add the visit later
-                    $this->crawlerFound = $this->em->getRepository('WebDLCrawltrackBundle:Crawler')->find($crawlerWithIPRange['id']);
+                    $this->crawlerFound = $this->em->getRepository(Crawler::class)->find($crawlerWithIPRange['id']);
                     return true;
                 }
             }
@@ -110,7 +106,7 @@ class CrawlerTracker
             // No user agent provided, too bad
             return false;
         }
-        $crawlersWithUAs = $this->em->getRepository('WebDLCrawltrackBundle:Crawler')->findByComplexUAs();
+        $crawlersWithUAs = $this->em->getRepository(Crawler::class)->findByComplexUAs();
 
         if (!$crawlersWithUAs) {
             return false;
@@ -121,7 +117,7 @@ class CrawlerTracker
             foreach ($crawlerWithUAs['UAs'] as $uaData) {
                 if ($this->hasCorrespondingUA($userAgent, $uaData)) {
                     // Load the corresponding Crawler entity, as we need an entity object to add the visit later
-                    $this->crawlerFound = $this->em->getRepository('WebDLCrawltrackBundle:Crawler')->find($crawlerWithUAs['id']);
+                    $this->crawlerFound = $this->em->getRepository(Crawler::class)->find($crawlerWithUAs['id']);
                     return true;
                 }
             }
@@ -132,7 +128,11 @@ class CrawlerTracker
     private function isWithinIPRange($ip, $ipRange): bool
     {
         if (strpos($ipRange, '-') !== false || strpos($ipRange, '*') !== false) {
-            return WDLIpUtils::IPInRange($ip, $ipRange);
+            try {
+                return WDLIpUtils::iPInRange($ip, $ipRange);
+            } catch (\Exception $e) {
+                return false;
+            }
         }
         if (strpos($ipRange, '/') !== false) {
             return SfIpUtils::checkIp($ip, $ipRange);
@@ -145,9 +145,9 @@ class CrawlerTracker
     {
         if ($userAgentData['isRegexp']) {
             return preg_match('#' . $userAgentData['userAgent'] . '#i', $userAgent);
-        } else {
-            // Partial correspondence, so let's just add wildcards to the original string
-            return preg_match('#(.*)' . $userAgentData['userAgent'] . '(.*)#i', $userAgent);
         }
+
+        // Partial correspondence, so let's just add wildcards to the original string
+         return preg_match('#(.*)' . $userAgentData['userAgent'] . '(.*)#i', $userAgent);
     }
 }

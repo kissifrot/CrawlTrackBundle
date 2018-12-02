@@ -6,8 +6,5 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class WebDLCrawltrackBundle extends Bundle
 {
-    /**
-     * Bundle version
-     */
-    const VERSION = 'dev-master';
+    public const VERSION = 'dev-master';
 }

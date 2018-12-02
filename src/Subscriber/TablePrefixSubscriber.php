@@ -1,7 +1,5 @@
 <?php
-/**
- * Table prefix subscriber, to add table prefix for the bundle
- */
+
 namespace WebDL\CrawltrackBundle\Subscriber;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
@@ -11,17 +9,17 @@ class TablePrefixSubscriber implements \Doctrine\Common\EventSubscriber
 {
     protected $prefix = '';
 
-    public function __construct($prefix)
+    public function __construct(string $prefix)
     {
-        $this->prefix = (string) $prefix;
+        $this->prefix = $prefix;
     }
 
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
-        return array('loadClassMetadata');
+        return ['loadClassMetadata'];
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $args)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $args): void
     {
         /** @var ClassMetadata $classMetadata */
         $classMetadata = $args->getClassMetadata();
@@ -31,8 +29,8 @@ class TablePrefixSubscriber implements \Doctrine\Common\EventSubscriber
             return;
         }
 
-        if (FALSE !== strpos($classMetadata->namespace, 'CrawltrackBundle')) {
-            $classMetadata->setPrimaryTable(array('name' => $this->prefix . $classMetadata->getTableName()));
+        if (false !== strpos($classMetadata->namespace, 'CrawltrackBundle')) {
+            $classMetadata->setPrimaryTable(['name' => $this->prefix . $classMetadata->getTableName()]);
 
             foreach ($classMetadata->getAssociationMappings() as $fieldName => $mapping) {
                 if ($mapping['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY
